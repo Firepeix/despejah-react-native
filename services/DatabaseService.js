@@ -30,6 +30,15 @@ export default class DatabaseService {
     return await AsyncStorage.setItem(table, JSON.stringify(models));
   }
 
+  async insertModels (models, table) {
+    const savedModels = await this.getModels(table);
+    models.forEach(model => {
+      model.id = model.id !== undefined && model.id !== null ? model.id : this.generateId(JSON.stringify(model));
+      savedModels.push(model);
+    })
+    return await AsyncStorage.setItem(table, JSON.stringify(savedModels));
+  }
+
   /**
    * Função que atualiza uma entidade no AsyncStorage
    */

@@ -35,8 +35,8 @@ export default class ExpenseTypeService {
       { id: 3, name: 'Eventuais', icon: 'tag', limit: 40000, chartId: 'event' }
     ];
 
-    types.forEach( async type => {
-      await this.databaseService.insertModel(type, 'expense-types')
+    this.databaseService.insertModels(types, 'expense-types').then(() => {
+      types[0].saved = true
     })
 
     return types;

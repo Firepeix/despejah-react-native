@@ -4,7 +4,6 @@ import React from 'react';
 import DatePrimitive from '../Primitives/DatePrimitive';
 import NumberPrimitive from '../Primitives/NumberPrimitive';
 //import Home from './Home';
-import AlertPrimitive from '../Primitives/AlertPrimitive';
 //import Expenses from './Expenses';
 import { View, TextInput, StyleSheet } from 'react-native';
 import Page from './Page';
@@ -113,13 +112,14 @@ export default class NewExpense extends Page {
   /**
    * Salva a despesa do formulario
    */
-  saveExpense = () => {
+  saveExpense = async () => {
     if (this.validate()) {
       const expense = this.props.expenseService.makeExpense(this.savedExpenseId, this.state.name, this.state.type, this.state.date, this.state.amount);
-      this.props.expenseService.saveExpense(expense);
+      await this.props.expenseService.saveExpense(expense);
       const message = this.hasSavedExpense ? 'Despesa editada com sucesso!' : 'Despesa salva com sucesso!'
-      const page = !this.hasSavedExpense ? Home : Expenses
-      AlertPrimitive.success(message, () => this.props.changePage(page));
+      // const page = !this.hasSavedExpense ? Home : Expenses
+      this.props.toast(message)
+      this.props.changePage(page)
     }
   };
 
@@ -169,7 +169,7 @@ export default class NewExpense extends Page {
    * @return {string|null}
    */
   validateType = () => {
-    if (isNaN(this.state.type) || this.state.type === '') {
+    if (isNaN(this.state.type) || this.state.type === '' || this.state.type === 0) {
       return 'Por favor selecione uma categoria!';
     }
 
@@ -182,11 +182,10 @@ export default class NewExpense extends Page {
    */
   validateDate = () => {
     if (this.state.date !== '') {
-      const inputDate = new Date(DatePrimitive.toISODateString(this.state.date) + ' 00:00:00');
+      const inputDate = new Date(`${DatePrimitive.toISODateString(this.state.date)}T00:00:00`);
       if (!DatePrimitive.isValid(inputDate)) {
         return 'Por favor preencha com uma data valida';
       }
-
       if (inputDate > new Date()) {
         return 'Por favor preencha com uma data no passado';
       }
@@ -278,6 +277,7 @@ export default class NewExpense extends Page {
           ) : null}
         </View>
       </View>
+
     );
   }
 }

@@ -1,6 +1,7 @@
 import NumberPrimitive from './NumberPrimitive';
 //import SimpleMaskMoney from 'simple-mask-money'
 export default class AlertPrimitive {
+
   /**
    * Função que exibe o SweetAlert2 para o usuario de forma generica
    */
@@ -19,9 +20,9 @@ export default class AlertPrimitive {
   /**
    * Função que exibe um alerta de sucesso para o usuário
    */
-  //static success (message, onClose = null) {
-  //  AlertPrimitive.alert('success', 'Sucesso', message, 1800, onClose);
-  //}
+  static success (message, onClose = null) {
+    // AlertPrimitive.alert('success', 'Sucesso', message, 1800, onClose);
+  }
 
   /**
    * Exibe o dialogo de edição de limite

@@ -11,15 +11,16 @@ export default class ExpenseService {
    * Busca despesa do storage da mais nova para antiga
    * @return {unknown[]}
    */
-  getExpenses () {
-    return this.databaseService.getModels('expenses').reverse();
+  async getExpenses () {
+    const expenses = await this.databaseService.getModels('expenses')
+    return expenses.reverse();
   }
 
   /**
    * Função que busca as 3 maiores despesas salvas
    */
-  getThreeBiggestExpenses (expenses = null) {
-    let sortedExpenses = expenses === null ? this.databaseService.getModels('expenses') : expenses
+  async getThreeBiggestExpenses (expenses = null) {
+    let sortedExpenses = expenses === null ? await this.databaseService.getModels('expenses') : expenses
     sortedExpenses = sortedExpenses.sort((expenseA, expenseB) => expenseA.amount > expenseB.amount ? -1 : 1)
     return sortedExpenses.slice(0, 3)
   }
@@ -27,13 +28,13 @@ export default class ExpenseService {
   /**
    * Função que salva uma despesa no localStorage
    */
-  saveExpense (expense) {
+  async saveExpense (expense) {
     if (this.databaseService.exists(expense)) {
-      this.databaseService.updateModel(expense, 'expenses')
+      await this.databaseService.updateModel(expense, 'expenses')
       return;
     }
 
-    this.databaseService.insertModel(expense, 'expenses');
+    await this.databaseService.insertModel(expense, 'expenses');
   }
 
   /**
@@ -49,8 +50,8 @@ export default class ExpenseService {
    * Deleta uma despesa do storage
    * @param id
    */
-  deleteExpense (id) {
-    this.databaseService.deleteModel(id, 'expenses')
+  async deleteExpense (id) {
+    await this.databaseService.deleteModel(id, 'expenses')
   }
 
   /**

@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import NavBar from './navigation/NavBar';
 import Constants from 'expo-constants';
 import NewExpense from '../pages/NewExpense';
+import { Snackbar } from 'react-native-paper';
 //import Home from '../pages/Home';
 
 export default class MainLayout extends React.Component {
@@ -13,14 +14,19 @@ export default class MainLayout extends React.Component {
     this.state = {
       page: NewExpense,
       mainButton: 'newExpense',
-      mainButtonAction: null
+      mainButtonAction: null,
+      toast: {
+        active: false,
+        message: ''
+      }
     };
 
     this._pageProps = {
       expenseTypeService: props.expenseTypeService,
       changeMainButton: this.changeMainButton,
       expenseService: props.expenseService,
-      changePage: this.changePage
+      changePage: this.changePage,
+      toast: this.toast
     }
     this._dynamicPageProps = {}
   }
@@ -73,8 +79,20 @@ export default class MainLayout extends React.Component {
       main: {
         width: '100%',
         backgroundColor: 'rgb(255,255,255)',
+      },
+      snack: {
+        marginBottom: 90,
+        backgroundColor: 'green'
       }
     })
+  }
+
+  toast = (message) => {
+    this.setState({toast: { message, active: true }})
+  }
+
+  dismissToast = () => {
+    this.setState({toast: { message: '', active: false }})
   }
 
   render () {
@@ -85,6 +103,9 @@ export default class MainLayout extends React.Component {
         <ScrollView style={this.style.main}>
           {page}
         </ScrollView>
+        <Snackbar style={this.style.snack} visible={this.state.toast.active} onDismiss={() => this.dismissToast()} duration={2000}>
+          {this.state.toast.message}
+        </Snackbar>
         <NavBar changePage={this.changePage} dispatchMainButtonClicked={this.mainButtonClicked} mainButton={this.state.mainButton}/>
       </View>
     );

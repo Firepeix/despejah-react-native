@@ -10,7 +10,7 @@ export default class MainButton extends React.Component {
     this.createStyle(props)
   }
 
-  createStyle (props) {
+  createStyle () {
     this.style = StyleSheet.create({
       button: {
         alignItems: 'center',
@@ -41,7 +41,7 @@ export default class MainButton extends React.Component {
   render () {
     if (this.isActive) {
       return (
-        <TouchableRipple style={this.style.button} onPress={() => console.log('Pressed')} rippleColor="rgba(255, 255, 255, .32)">
+        <TouchableRipple style={this.style.button} onPress={this.props.onPress} rippleColor="rgba(255, 255, 255, .32)">
           <View >
             <Icon source={this.props.icon} size={33} color={'white'} />
             <Text style={this.style.label}>{this.props.title}</Text>
