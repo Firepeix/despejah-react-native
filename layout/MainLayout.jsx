@@ -1,10 +1,9 @@
 import React from 'react';
-//import Header from './section/Header';
-import { ScrollView, StyleSheet } from 'react-native';
+import Header from './section/Header';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import NavBar from './navigation/NavBar';
-import { View } from 'react-native';
 import Constants from 'expo-constants';
-import { Text } from 'react-native-paper';
+import NewExpense from '../pages/NewExpense';
 //import Home from '../pages/Home';
 
 export default class MainLayout extends React.Component {
@@ -12,15 +11,15 @@ export default class MainLayout extends React.Component {
     super(props);
     this.createStyle()
     this.state = {
-     // page: Home,
+      page: NewExpense,
       mainButton: 'newExpense',
       mainButtonAction: null
     };
 
     this._pageProps = {
-      expenseTypeService: this.props.expenseTypeService,
+      expenseTypeService: props.expenseTypeService,
       changeMainButton: this.changeMainButton,
-      expenseService: this.props.expenseService,
+      expenseService: props.expenseService,
       changePage: this.changePage
     }
     this._dynamicPageProps = {}
@@ -62,19 +61,6 @@ export default class MainLayout extends React.Component {
     return {...this._pageProps, ...this._dynamicPageProps}
   }
 
-  //render () {
-  //  const page = React.createElement(this.state.page, this.pageProps);
-  //  return (
-  //    <div>
-  //      <Header title={this.state.page.title(page.props)}/>
-  //      <main>
-  //        {page}
-  //      </main>
-  //      <NavBar changePage={this.changePage} dispatchMainButtonClicked={this.mainButtonClicked} mainButton={this.state.mainButton}/>
-  //    </div>
-  //  );
-  //}
-
   createStyle () {
     this.style = StyleSheet.create({
       view: {
@@ -92,10 +78,12 @@ export default class MainLayout extends React.Component {
   }
 
   render () {
+    const page = React.createElement(this.state.page, this.pageProps)
     return (
       <View style={this.style.view}>
+        <Header title={this.state.page.title(page.props)}/>
         <ScrollView style={this.style.main}>
-          <Text style={{flex: 1}}>Teeste</Text>
+          {page}
         </ScrollView>
         <NavBar changePage={this.changePage} dispatchMainButtonClicked={this.mainButtonClicked} mainButton={this.state.mainButton}/>
       </View>

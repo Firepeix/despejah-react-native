@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default class DatabaseService {
 
   /**
@@ -19,43 +21,44 @@ export default class DatabaseService {
   }
 
   /**
-   * Função que insere uma entidade no localStorage
+   * Função que insere uma entidade no AsyncStorage
    */
-  insertModel (model, table) {
-    const models = this.getModels(table);
+  async insertModel (model, table) {
+    const models = await this.getModels(table);
     model.id = model.id !== undefined && model.id !== null ? model.id : this.generateId(JSON.stringify(model));
     models.push(model);
-    localStorage.setItem(table, JSON.stringify(models));
+    return await AsyncStorage.setItem(table, JSON.stringify(models));
   }
 
   /**
-   * Função que atualiza uma entidade no localStorage
+   * Função que atualiza uma entidade no AsyncStorage
    */
-  updateModel (model, table) {
+  async updateModel (model, table) {
     const models = this.getModels(table);
     const modelPos = models.findIndex(expense => expense.id === model.id)
 
     if (modelPos !== -1) {
       models[modelPos] = model
-      localStorage.setItem(table, JSON.stringify(models));
+      return await AsyncStorage.setItem(table, JSON.stringify(models));
     }
   }
 
   /**
-   * Função que deleta uma entidade no localStorage
+   * Função que deleta uma entidade no AsyncStorage
    */
-  deleteModel (id, table) {
+  async deleteModel (id, table) {
     let models = this.getModels(table);
     models = models.filter(expense => expense.id !== id)
 
-    localStorage.setItem(table, JSON.stringify(models));
+    await AsyncStorage.setItem(table, JSON.stringify(models));
   }
 
   /**
-   * Função que busca entidades no localStorage
+   * Função que busca entidades no AsyncStorage
    */
-  getModels (table) {
-    return localStorage.getItem(table) === null ? [] : JSON.parse(localStorage.getItem(table));
+  async getModels (table) {
+    const response = await AsyncStorage.getItem(table)
+    return response === null ? [] : JSON.parse(response);
   }
 
   /**

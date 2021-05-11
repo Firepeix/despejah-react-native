@@ -1,13 +1,18 @@
 import React from 'react';
-import CurrencyInput from 'react-currency-masked-input';
-import InputMask from "react-input-mask";
+//import CurrencyInput from 'react-currency-masked-input';
+//import InputMask from "react-input-mask";
 import DatePrimitive from '../Primitives/DatePrimitive';
 import NumberPrimitive from '../Primitives/NumberPrimitive';
-import Home from './Home';
+//import Home from './Home';
 import AlertPrimitive from '../Primitives/AlertPrimitive';
-import Expenses from './Expenses';
+//import Expenses from './Expenses';
+import { View, TextInput, StyleSheet } from 'react-native';
+import Page from './Page';
+import { Text } from 'react-native-paper';
+import RNPickerSelect from 'react-native-picker-select';
+import { TextInputMask } from 'react-native-masked-text';
 
-export default class NewExpense extends React.Component {
+export default class NewExpense extends Page {
   constructor (props) {
     super(props);
     this.state = {
@@ -20,12 +25,43 @@ export default class NewExpense extends React.Component {
         type: null,
         date: null,
         amount: null
-      }
+      },
+      expenseTypes: []
     };
   }
 
+
+  createStyle (overload = { page: {} }) {
+    super.createStyle(overload);
+    this.newExpenseStyle = StyleSheet.create({
+      amountLabel: {
+        ...this.style.label,
+        fontSize: 25.6,
+        textAlign: 'center'
+      },
+      amountWrapper: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'flex-end'
+      },
+      symbol: {
+        borderBottomWidth: 2,
+        backgroundColor: 'white',
+        borderColor: '#ebebeb',
+        fontSize: 32
+      },
+      amountInput: {
+        ...this.style.input,
+        fontSize: 48,
+        fontWeight: '500',
+        textAlign: 'center',
+        width: '100%'
+      }
+    })
+  }
+
   /**
-   * Veridica se o formulario é de criação ou edição
+   * Verifica se o formulário é de criação ou edição
    * @return {boolean}
    */
   get hasSavedExpense () {
@@ -33,7 +69,7 @@ export default class NewExpense extends React.Component {
   }
 
   /**
-   * Se for um formulario de edição retorna o id da despesa a ser editada
+   * Se for um formulário de edição retorna o id da despesa a ser editada
    * @return {null|*}
    */
   get savedExpenseId () {
@@ -54,14 +90,10 @@ export default class NewExpense extends React.Component {
 
   /**
    * Metodo que lida com a input do usuario
-   * @param element
    * @param name
    * @param value
    */
-  handleInput = (element, name, value) => {
-    if (value === undefined) {
-      value = element.value;
-    }
+  handleInput = (value, name) => {
     this.setState({
       [name]: value
     });
@@ -69,6 +101,13 @@ export default class NewExpense extends React.Component {
 
   componentDidMount () {
     this.props.changeMainButton('saveExpense', this.saveExpense);
+    this.props.expenseTypeService.getExpenseTypes().then(types => {
+      this.setState({ expenseTypes: types.map(type => {
+        return { label: type.name, value: type.id }
+        })})
+    }).catch(() => {
+      this.setState({ expenseTypes: []})
+    })
   }
 
   /**
@@ -188,48 +227,57 @@ export default class NewExpense extends React.Component {
   }
 
   render () {
-    return (<div className={'page'}>
-        <form id="new-expense-form">
-          <div className="input-wrapper">
-            <label htmlFor="expense-name">Nome</label>
-            <input id="expense-name" value={this.state.name} onChange={e => this.handleInput(e.target, 'name')} type="text"/>
-            {this.state.errors.name !== null ? (
-              <div className="error">{this.state.errors.name}</div>
-            ) : ''}
-          </div>
-          <div className="input-wrapper">
-            <label htmlFor="expense-type">Categoria</label>
-            <select id="expense-type" value={this.state.type} onChange={e => this.handleInput(e.target, 'type')}>
-              <option>
-                Selecionar Categoria
-              </option>
-              {this.props.expenseTypeService.getExpenseTypes().map((type) =>
-                <option key={type.id} value={type.id}>{type.name}</option>
-              )}
-            </select>
-            {this.state.errors.type !== null ? (
-              <div className="error">{this.state.errors.type}</div>
-            ) : ''}
-          </div>
-          <div className="input-wrapper">
-            <label htmlFor="expense-date">Data</label>
-            <InputMask mask="99/99/9999" maskPlaceholder={'dd/mm/yyyy'} placeholder={'dd/mm/yyyy'} inputMode="numeric" type="text" onChange={e => this.handleInput(e.target, 'date')} value={this.state.date}/>
-            {this.state.errors.date !== null ? (
-              <div className="error">{this.state.errors.date}</div>
-            ) : ''}
-          </div>
-          <div className="input-wrapper amount">
-            <label htmlFor="expense-amount">Valor</label>
-            <div>
-              <span>R$</span>
-              <CurrencyInput value={this.state.amount} onChange={(e, value) => this.handleInput(e.target, 'amount', value)} separator={','} maxLength="10" inputMode="numeric" type="text"/>
-            </div>
-            {this.state.errors.amount !== null ? (
-              <div className="error">{this.state.errors.amount}</div>
-            ) : ''}
-          </div>
-        </form>
-      </div>
+    return (
+      <View style={this.style.page}>
+        <View style={this.style.inputWrapper}>
+          <Text style={this.style.label}>Nome</Text>
+          <TextInput label="Nome" value={this.state.name} style={this.style.input}
+            onChangeText={text => this.handleInput(text, 'name')}
+          />
+          {this.state.errors.name !== null ? (
+            <Text style={this.style.error}>{this.state.errors.name}</Text>
+          ) : null}
+        </View>
+        <View style={this.style.inputWrapper}>
+          <Text style={this.style.label}>Categoria</Text>
+          <RNPickerSelect useNativeAndroidPickerStyle={false} style={this.pickerStyle}
+            onValueChange={category => this.handleInput(category, 'type')}
+            placeholder={ { label: 'Selecionar Categoria', value: 0 }}
+            items={this.state.expenseTypes} value={this.state.type}
+          />
+          {this.state.errors.type !== null ? (
+            <Text style={this.style.error}>{this.state.errors.type}</Text>
+          ) : null}
+        </View>
+        <View style={this.style.inputWrapper}>
+          <Text style={this.style.label}>Data</Text>
+          <TextInputMask type={'datetime'} options={{ format: 'DD/MM/YYYY' }} style={this.style.input}
+            value={this.state.date} onChangeText={date => this.handleInput(date, 'date')}
+          />
+          {this.state.errors.date !== null ? (
+            <Text style={this.style.error}>{this.state.errors.date}</Text>
+          ) : null}
+        </View>
+        <View style={this.style.inputWrapper}>
+          <Text style={this.newExpenseStyle.amountLabel}>Valor</Text>
+          <View style={this.newExpenseStyle.amountWrapper}>
+            <Text style={this.newExpenseStyle.symbol}>R$</Text>
+            <TextInputMask maxLength={10} type={'money'} value={this.state.amount}
+              onChangeText={value => this.handleInput(value, 'amount')}
+              style={this.newExpenseStyle.amountInput} options={{
+              precision: 2,
+              separator: ',',
+              delimiter: '.',
+              unit: '',
+              suffixUnit: ''
+            }}
+            />
+          </View>
+          {this.state.errors.amount !== null ? (
+            <Text style={this.style.error}>{this.state.errors.amount}</Text>
+          ) : null}
+        </View>
+      </View>
     );
   }
 }

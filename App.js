@@ -5,22 +5,36 @@ import { AppRegistry } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { expo } from './app.json';
 import MainLayout from './layout/MainLayout';
+import ExpenseTypeService from './services/ExpenseTypeService';
+import ExpenseService from './services/ExpenseService';
 
 const theme = {
   ...DefaultTheme,
   roundness: 2,
   dark: false,
-  background: '#0086ff',
-  mode: 'exact'
+  mode: 'exact',
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#ff828b',
+    accent: '#ff4a57',
+  },
 };
 
-function App() {
-  return (
-    <View style={{flex: 1}}>
-      <StatusBar style="auto" />
-      <MainLayout style={{flex: 1}} />
-    </View>
-  );
+class App extends React.Component{
+  constructor (props) {
+    super(props);
+    this.expenseServiceType = new ExpenseTypeService()
+    this.expenseService = new ExpenseService()
+  }
+
+  render () {
+    return (
+      <View style={{flex: 1}}>
+        <StatusBar style="auto" />
+        <MainLayout expenseService={this.expenseService} expenseTypeService={this.expenseServiceType} style={{flex: 1}} />
+      </View>
+    )
+  }
 }
 
 export default function Main() {

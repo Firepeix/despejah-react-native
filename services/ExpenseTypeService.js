@@ -8,8 +8,8 @@ export default class ExpenseTypeService {
   /**
    * Função que busca as categorias de despesas
    */
-  getExpenseTypes (hash = false) {
-    let expenseTypes = this.databaseService.getModels('expense-types');
+  async getExpenseTypes (hash = false) {
+    let expenseTypes = await this.databaseService.getModels('expense-types');
     if (expenseTypes.length < 1) {
       expenseTypes = this.getDefaultExpenseTypes();
     }
@@ -35,8 +35,8 @@ export default class ExpenseTypeService {
       { id: 3, name: 'Eventuais', icon: 'tag', limit: 40000, chartId: 'event' }
     ];
 
-    types.forEach(type => {
-      this.databaseService.insertModel(type, 'expense-types')
+    types.forEach( async type => {
+      await this.databaseService.insertModel(type, 'expense-types')
     })
 
     return types;
@@ -46,7 +46,7 @@ export default class ExpenseTypeService {
    * Atualiza limite de um tipo de despesa
    * @param type
    */
-  updateType (type) {
-    this.databaseService.updateModel(type, 'expense-types')
+  async updateType (type) {
+    await this.databaseService.updateModel(type, 'expense-types')
   }
 }
