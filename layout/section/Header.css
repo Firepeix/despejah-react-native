@@ -1,0 +1,21 @@
+header {
+    padding: 1.5rem 1.5rem 0 1.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+header .logo {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+header .logo img {
+    width: 60px;
+    padding-right: 6px;
+}
+
+header .title {
+    font-weight: 600;
+    font-size: 1.6rem;
+}

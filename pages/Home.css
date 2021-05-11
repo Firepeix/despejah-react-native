@@ -1,0 +1,95 @@
+.home {
+    display: flex;
+    flex-direction: column;
+}
+
+.home .title {
+    text-align: right;
+    font-weight: 600;
+}
+
+.home .charts {
+    display: flex;
+    justify-content: space-between;
+}
+
+.home .charts .type {
+    color: #a4a4a4;
+    text-align: center;
+    font-weight: 600;
+    padding-bottom: 6px;
+}
+
+.charts > div:first-child .chart {
+    color: #e61610 !important;
+}
+
+.charts > div:last-child .chart {
+    color: #606060 !important;
+}
+
+.chart::before {
+    border-radius: 100%;
+    content: '';
+    top: -5px;
+    left: -5px;
+    bottom: -5px;
+    right: -5px;
+    position: absolute;
+    z-index:-1;
+    background-image: linear-gradient(to bottom, #ebebeb 50%, #0c59cf 50%);
+}
+
+.charts > div:first-child .chart::before {
+    background-image: linear-gradient(to bottom, #ebebeb 50%, #e61610 50%);
+}
+
+.charts > div:last-child .chart::before {
+    background-image: linear-gradient(to bottom, #ebebeb 50%, #606060 50%);
+}
+
+.home .status.active {
+    display: flex;
+}
+
+.home .section {
+    padding-bottom: 1rem;
+}
+
+.home hr {
+    height: 4px;
+    border-radius: 4px;
+    border: none;
+    background: linear-gradient(to left,  black 45%,#ebebeb 45%);
+}
+
+.home .icon {
+    margin-bottom: 3px;
+    padding-right: 5px;
+}
+
+.home table {
+    width: 100%;
+    border-collapse: collapse;
+    padding-bottom: 1rem;
+}
+
+.home table tr:not(:last-child) {
+    border-bottom: 1px solid #ebebeb;
+}
+
+.home table th {
+    width: 60%;
+    font-weight: 400;
+}
+
+.home table th > div{
+    display: flex;
+    align-items: center;
+}
+
+.home table td {
+    text-align: right;
+    font-weight: 600;
+    color: #a4a4a4;
+}

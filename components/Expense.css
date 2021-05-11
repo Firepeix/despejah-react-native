@@ -1,0 +1,70 @@
+.expense {
+    display: flex;
+    border: black solid 2px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    line-height: 1;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.expense .name {
+    font-weight: 700;
+}
+
+.expense .amount {
+    padding-top: 2rem;
+    color: #ff4a57;
+    font-weight: 700;
+}
+
+.expense div > div {
+    display: flex;
+    align-items: center;
+}
+
+.expense .date {
+    font-size: 15px;
+    color: #a4a4a4;
+    padding-top: 5px;
+}
+
+.expense .type {
+    padding-top: 1rem;
+    font-weight: 400;
+}
+
+.expense .options {
+    border-radius: 100%;
+}
+
+.expense .icon {
+    margin-bottom: 3px;
+}
+
+.expense-type {
+    display: flex;
+    border: black solid 2px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    line-height: 1;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.expense-type .icon {
+    padding-right: 3px;
+    margin-bottom: 3px;
+}
+
+.expense-type .limit {
+    color: #ff4a57;
+}
+
+.expense-type .options img {
+    padding-left: 5px;
+}

@@ -1,0 +1,22 @@
+.nav-button {
+    display: flex;
+    padding: 0 0 6px 0;
+    align-items: center;
+    width: 33%;
+    flex-direction: column;
+}
+
+.nav-button.main {
+    background: #ff4a57;
+    border-radius: 100%;
+    justify-content: center;
+    width: 80px;
+    height: 71px;
+    margin: 0 0 46px 0;
+    display: none;
+}
+
+.nav-button .icon {
+    width: 33px;
+    color: white !important;
+}
