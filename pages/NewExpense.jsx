@@ -1,15 +1,13 @@
 import React from 'react';
-//import CurrencyInput from 'react-currency-masked-input';
-//import InputMask from "react-input-mask";
 import DatePrimitive from '../Primitives/DatePrimitive';
 import NumberPrimitive from '../Primitives/NumberPrimitive';
 //import Home from './Home';
-//import Expenses from './Expenses';
 import { View, TextInput, StyleSheet } from 'react-native';
 import Page from './Page';
 import { Text } from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
 import { TextInputMask } from 'react-native-masked-text';
+import Expenses from './Expenses';
 
 export default class NewExpense extends Page {
   constructor (props) {
@@ -119,7 +117,7 @@ export default class NewExpense extends Page {
       const message = this.hasSavedExpense ? 'Despesa editada com sucesso!' : 'Despesa salva com sucesso!'
       // const page = !this.hasSavedExpense ? Home : Expenses
       this.props.toast(message)
-      this.props.changePage(page)
+      this.props.changePage(Expenses)
     }
   };
 

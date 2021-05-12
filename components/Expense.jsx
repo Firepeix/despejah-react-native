@@ -1,10 +1,9 @@
 import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import DatePrimitive from '../Primitives/DatePrimitive';
-import { car, foodForkDrink, tag } from '../icons/expense-types/expense-type-icons'
-import { dots, pencil, minusCircle } from '../icons/icons';
 import NumberPrimitive from '../Primitives/NumberPrimitive';
-import Ripples from 'react-ripples'
-import './Expense.css'
+import { Text, TouchableRipple, Menu, Divider } from 'react-native-paper';
+import Icon from 'react-native-paper/lib/module/components/Icon';
 
 export default class Expense extends React.Component {
   constructor (props) {
@@ -12,25 +11,57 @@ export default class Expense extends React.Component {
     this.state = {
       menuIsOpened: false
     }
+    this.createStyle()
   }
 
-  /**
-   * Tabela HASH que retorna o icone svg a partir do id
-   * @return {{'food-fork-drink', car, tag}}
-   */
-  get expenseTypeIcons () {
-    return {
-      'food-fork-drink': foodForkDrink,
-      car: car,
-      tag: tag
-    };
+  createStyle () {
+    this.style = StyleSheet.create({
+      expense: {
+        flex: 1,
+        borderColor: 'black',
+        borderWidth: 2,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 10,
+        borderRadius: 8,
+        fontWeight: '700',
+        marginTop: 20
+      },
+      section:{
+        flex: 1,
+        justifyContent: 'space-between',
+      },
+      name: {
+        fontWeight: '700',
+        fontSize: 20,
+      },
+      date: {
+        fontSize: 15,
+        color: '#a4a4a4'
+      },
+      type: {
+        flex: 1,
+        alignItems: 'center',
+        paddingTop: 20,
+        flexDirection: 'row',
+        fontWeight: '400'
+      },
+      amount: {
+        paddingTop: 30,
+        fontSize: 20,
+        textAlign: 'right',
+        color: '#ff4a57',
+        fontWeight: '700'
+      }
+    })
   }
 
   /**
    * Ativa ou desativa o menu
    */
   toggleMenu = () => {
-    this.setState({ menuIsOpened: !this.state.menuIsOpened })
+    this.setState({ menuIsOpened: true })
   }
 
   /**
@@ -59,38 +90,46 @@ export default class Expense extends React.Component {
     }
   }
 
+  /*<ul className={this.menuClass} id="expense-menu" style={{ height: '97px' }}>
+            <li>
+              <div onClick={() => } className="flex items-center">
+                <img src={pencil} alt="Editar" className="icon"/>
+                <div className="update"></div>
+              </div>
+            </li>
+            <li>
+              <div onClick={} className="flex items-center">
+                <img src={minusCircle} alt="Deletar" className="icon"/>
+                <div className="delete"></div>
+              </div>
+            </li>
+          </ul>*/
+
   render () {
     return (
-      <div className="expense">
-        <div className="flex column content-between">
-          <div className="name">{this.props.name}</div>
-          <div className="date">{DatePrimitive.toEURDateString(this.props.date)}</div>
-          <div className="type">
-            <img src={this.expenseTypeIcons[this.props.type.icon]} style={{marginRight: '6px'}} alt="Home" className="icon"/>
-            <div className="type-name">{this.props.type.name}</div>
-          </div>
-        </div>
-        <div className="flex column items-end more">
-          <Ripples className="options" onClick={this.toggleMenu}>
-            <img src={dots} alt="Opções"/>
-          </Ripples>
-          <ul className={this.menuClass} id="expense-menu" style={{ height: '97px' }}>
-            <li>
-              <div onClick={() => this.props.handleEditExpense(this.expense)} className="flex items-center">
-                <img src={pencil} alt="Editar" className="icon"/>
-                <div className="update">Editar</div>
-              </div>
-            </li>
-            <li>
-              <div onClick={() => this.props.handleDeleteExpense(this.props.id)} className="flex items-center">
-                <img src={minusCircle} alt="Deletar" className="icon"/>
-                <div className="delete">Deletar</div>
-              </div>
-            </li>
-          </ul>
-          <div className="amount">R$ {NumberPrimitive.toReal(this.props.amount)}</div>
-        </div>
-      </div>
+      <View style={this.style.expense}>
+        <View style={this.style.section}>
+          <Text style={this.style.name}>{this.props.name}</Text>
+          <Text style={this.style.date}>{DatePrimitive.toEURDateString(this.props.date)}</Text>
+          <View style={this.style.type}>
+            <Icon source={this.props.type.icon} size={22} />
+            <Text style={{marginLeft: 6, fontSize: 18}}>{this.props.type.name}</Text>
+          </View>
+        </View>
+        <View style={{...this.style.section, alignItems: 'flex-end'}}>
+          <Menu
+            visible={this.state.menuIsOpened}
+            onDismiss={() => {this.setState({menuIsOpened: false})}}
+            anchor={<TouchableRipple borderless={true} onPress={this.toggleMenu} rippleColor="rgba(255, 255, 255, .32)">
+              <Icon source={'dots-vertical'} size={35} />
+            </TouchableRipple>}>
+            <Menu.Item icon="pencil" onPress={() => this.props.handleEditExpense(this.expense)} title="Editar" />
+            <Divider/>
+            <Menu.Item icon="minus" onPress={() => this.props.handleDeleteExpense(this.props.id)} title="Deletar" />
+          </Menu>
+          <Text style={this.style.amount}>R$ {NumberPrimitive.toReal(this.props.amount)}</Text>
+        </View>
+      </View>
     );
   }
 }

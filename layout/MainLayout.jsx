@@ -3,8 +3,8 @@ import Header from './section/Header';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import NavBar from './navigation/NavBar';
 import Constants from 'expo-constants';
-import NewExpense from '../pages/NewExpense';
 import { Snackbar } from 'react-native-paper';
+import Expenses from '../pages/Expenses';
 //import Home from '../pages/Home';
 
 export default class MainLayout extends React.Component {
@@ -12,7 +12,7 @@ export default class MainLayout extends React.Component {
     super(props);
     this.createStyle()
     this.state = {
-      page: NewExpense,
+      page: Expenses,
       mainButton: 'newExpense',
       mainButtonAction: null,
       toast: {

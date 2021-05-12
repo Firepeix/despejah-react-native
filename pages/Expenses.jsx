@@ -1,14 +1,38 @@
 import React from 'react';
-import Expense from '../components/Expense';
-import AlertPrimitive from '../Primitives/AlertPrimitive';
 import NewExpense from './NewExpense';
+import Page from './Page';
+import { View } from 'react-native';
+import Expense from '../components/Expense';
 
-export default class Expenses extends React.Component{
+export default class Expenses extends Page{
   constructor (props) {
     super(props);
     this.state = {
-      expenses: this.props.expenseService.getExpenses()
+      expenses: [],
+      types: [],
+      loaded: false
     }
+  }
+
+
+  createStyle () {
+    super.createStyle({
+      page: {
+        marginBottom: 70
+      }
+    });
+  }
+
+  componentDidMount () {
+    this.props.expenseTypeService.getExpenseTypes(true).then(types => {
+      this.props.expenseService.getExpenses().then(expenses => {
+        this.setState({
+          types,
+          loaded: true,
+          expenses
+        })
+      })
+    })
   }
 
   /**
@@ -18,14 +42,6 @@ export default class Expenses extends React.Component{
    */
   static title (props) {
     return 'Despesas'
-  }
-
-  /**
-   * Busca os tipos de despesas
-   * @return {{}|[]|any}
-   */
-  get types () {
-    return this.props.expenseTypeService.getExpenseTypes(true)
   }
 
   /**
@@ -40,25 +56,28 @@ export default class Expenses extends React.Component{
    * Deleta a despesa e seta o estado do componente
    * @param id
    */
-  deleteExpense = (id) => {
-    this.props.expenseService.deleteExpense(id)
-    AlertPrimitive.success('Despesa deletada com sucesso', () => {
-      this.setState({
-        expenses: this.props.expenseService.getExpenses()
-      })
+  deleteExpense = async id => {
+    await this.props.expenseService.deleteExpense(id)
+    this.props.toast('Despesa deletada com sucesso')
+    const expenses = await this.props.expenseService.getExpenses()
+    this.setState({
+      expenses
     })
   }
 
   render () {
-    return (
-      <div className="page" style={{marginBottom: '70px'}}>
-        <div className="list">
+    if (this.state.loaded) {
+      return (
+        <View style={this.style.page}>
           {this.state.expenses.map((expense) =>
-            <Expense handleDeleteExpense={this.deleteExpense} handleEditExpense={this.editExpense}
-                     key={expense.id} id={expense.id} name={expense.name} date={expense.date} type={this.types[expense.typeId]} amount={expense.amount}/>
+             <Expense handleDeleteExpense={this.deleteExpense} handleEditExpense={this.editExpense}
+                      key={expense.id} id={expense.id} name={expense.name} date={expense.date} type={this.state.types[expense.typeId]} amount={expense.amount}/>
           )}
-        </div>
-      </div>
-    )
+        </View>
+      )
+    }
+
+    return null
+
   }
 }

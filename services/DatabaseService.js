@@ -43,7 +43,7 @@ export default class DatabaseService {
    * Função que atualiza uma entidade no AsyncStorage
    */
   async updateModel (model, table) {
-    const models = this.getModels(table);
+    const models = await this.getModels(table);
     const modelPos = models.findIndex(expense => expense.id === model.id)
 
     if (modelPos !== -1) {
@@ -56,7 +56,7 @@ export default class DatabaseService {
    * Função que deleta uma entidade no AsyncStorage
    */
   async deleteModel (id, table) {
-    let models = this.getModels(table);
+    let models = await this.getModels(table);
     models = models.filter(expense => expense.id !== id)
 
     await AsyncStorage.setItem(table, JSON.stringify(models));

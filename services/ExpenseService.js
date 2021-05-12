@@ -9,7 +9,6 @@ export default class ExpenseService {
 
   /**
    * Busca despesa do storage da mais nova para antiga
-   * @return {unknown[]}
    */
   async getExpenses () {
     const expenses = await this.databaseService.getModels('expenses')
