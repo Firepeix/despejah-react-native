@@ -1,7 +1,4 @@
 import React from 'react';
-//import Home from '../../pages/Home';
-import Expenses from '../../pages/Expenses';
-import NewExpense from '../../pages/NewExpense';
 import { View } from 'react-native';
 import { StyleSheet } from 'react-native';
 import NavButton from '../interaction/buttons/NavButton';
@@ -43,9 +40,9 @@ export default class NavBar extends React.Component {
     return (
       <View style={this.style.bar}>
         <NavButton onPress={() => console.log(123)} icon="home" title={'Home'}/>
-        <MainButton onPress={() => this.changePages(NewExpense)} icon="plus" active={this.props.mainButton === 'newExpense'} title={'Despesa'} />
+        <MainButton onPress={() => this.changePages('newExpense')} icon="plus" active={this.props.mainButton === 'newExpense'} title={'Despesa'} />
         <MainButton onPress={() => this.props.dispatchMainButtonClicked()} icon="check-bold" active={this.props.mainButton === 'saveExpense'} title={'Salvar'} />
-        <NavButton onPress={() => this.changePages(Expenses)} icon="format-list-bulleted" title={'Lista'} />
+        <NavButton onPress={() => this.changePages('expenses')} icon="format-list-bulleted" title={'Lista'} />
       </View>
     );
   }

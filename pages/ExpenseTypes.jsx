@@ -1,22 +1,39 @@
 import React from 'react';
 import ExpenseType from '../components/ExpenseType';
-import AlertPrimitive from '../Primitives/AlertPrimitive';
+import Page from './Page';
+import { View } from 'react-native';
 
-export default class ExpenseTypes extends React.Component {
+export default class ExpenseTypes extends Page {
 
   constructor (props) {
     super(props);
     this.state = {
-      types: this.props.expenseTypeService.getExpenseTypes()
+      types: [],
+      loaded: false,
     };
   }
+
+  createStyle () {
+    super.createStyle({
+      page: {
+        marginBottom: 70
+      }
+    });
+  }
+
   /**
    * Retorna o titulo da pagina
    * @param props
    * @return {string}
    */
   static title (props) {
-    return 'Categorias De Despesa';
+    return 'Categorias';
+  }
+
+  componentDidMount () {
+    this.props.expenseTypeService.getExpenseTypes().then(types => {
+      this.setState({types, loaded: true})
+    })
   }
 
   /**
@@ -24,27 +41,28 @@ export default class ExpenseTypes extends React.Component {
    * @param id
    * @param newLimit
    */
-  updateType = (id, newLimit) => {
+  updateType = async (id, newLimit) => {
     const type = this.state.types.find(type => type.id === id)
     if (type !== undefined) {
       type.limit = newLimit
-      this.props.expenseTypeService.updateType(type)
-      AlertPrimitive.success('Limite editado com sucesso', () => {
-        this.setState({
-          types: this.props.expenseTypeService.getExpenseTypes()
-        })
-      })
+      await this.props.expenseTypeService.updateType(type)
+      this.props.toast('Limite editado com sucesso')
+      const types = await this.props.expenseTypeService.getExpenseTypes()
+      this.setState({types})
     }
   };
 
   render () {
-    return (<div className="page" style={{ marginBottom: '70px' }}>
-      <div className="list">
-        {this.state.types.map(type =>
-          <ExpenseType updateType={(id, limit) => this.updateType(id, limit)}
-                       key={type.id} id={type.id} name={type.name} icon={type.icon} limit={type.limit}/>
-        )}
-      </div>
-    </div>);
+    if (this.state.loaded) {
+      return (
+        <View style={this.style.page}>
+          {this.state.types.map(type =>
+            <ExpenseType updateType={(id, limit) => this.updateType(id, limit)}
+                         key={type.id} id={type.id} name={type.name} icon={type.icon} limit={type.limit}/>
+          )}
+        </View>);
+    }
+
+    return null
   }
 }

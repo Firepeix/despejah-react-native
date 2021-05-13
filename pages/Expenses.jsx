@@ -1,5 +1,4 @@
 import React from 'react';
-import NewExpense from './NewExpense';
 import Page from './Page';
 import { View } from 'react-native';
 import Expense from '../components/Expense';
@@ -49,7 +48,7 @@ export default class Expenses extends Page{
    * @param expense
    */
   editExpense = (expense) => {
-    this.props.changePage(NewExpense, { savedExpense: expense })
+    this.props.changePage('newExpense', { savedExpense: expense })
   }
 
   /**

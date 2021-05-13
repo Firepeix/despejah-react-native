@@ -1,13 +1,11 @@
 import React from 'react';
 import DatePrimitive from '../Primitives/DatePrimitive';
 import NumberPrimitive from '../Primitives/NumberPrimitive';
-//import Home from './Home';
 import { View, TextInput, StyleSheet } from 'react-native';
 import Page from './Page';
 import { Text } from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
 import { TextInputMask } from 'react-native-masked-text';
-import Expenses from './Expenses';
 
 export default class NewExpense extends Page {
   constructor (props) {
@@ -108,21 +106,20 @@ export default class NewExpense extends Page {
   }
 
   /**
-   * Salva a despesa do formulario
+   * Salva a despesa do formulário
    */
   saveExpense = async () => {
     if (this.validate()) {
       const expense = this.props.expenseService.makeExpense(this.savedExpenseId, this.state.name, this.state.type, this.state.date, this.state.amount);
       await this.props.expenseService.saveExpense(expense);
       const message = this.hasSavedExpense ? 'Despesa editada com sucesso!' : 'Despesa salva com sucesso!'
-      // const page = !this.hasSavedExpense ? Home : Expenses
       this.props.toast(message)
-      this.props.changePage(Expenses)
+      this.props.changePage(!this.hasSavedExpense ? 'home' : 'expenses')
     }
   };
 
   /**
-   * Valida todas as inputs formulario
+   * Valida todas as inputs formulário
    * @return {boolean}
    */
   validate () {

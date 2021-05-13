@@ -1,23 +1,37 @@
 import React from 'react';
-import './Home.css';
-import sadFace from '../icons/sad-face.svg'
 import ExpenseResume from '../components/ExpenseResume';
-import { Doughnut } from 'react-chartjs-2';
-import Btn from '../layout/interaction/buttons/Btn';
-import ExpenseTypes from './ExpenseTypes';
+import Page from './Page';
 
-export default class Home extends React.Component {
+export default class Home extends Page {
 
   constructor (props) {
     super(props);
-    const expenses = this.props.expenseService.getExpenses()
     this.state = {
-      expenses,
-      biggestExpenses: this.props.expenseService.getThreeBiggestExpenses(),
-      budgets: this.props.expenseService.calculateBudgets(expenses, this.props.expenseTypeService.getExpenseTypes()),
-      charts: this.defaultCharts
+      expenses: [],
+      types: [],
+      biggestExpenses: [],
+      budgets: [],
+      charts: [],
     };
   }
+
+  componentDidMount () {
+    this.props.expenseService.getExpenses().then(async expenses  =>  {
+      const biggestExpenses = await this.props.expenseService.getThreeBiggestExpenses()
+      const types = await this.props.expenseTypeService.getExpenseTypes(true)
+      const budgets = this.props.expenseService.calculateBudgets(expenses, this.props.expenseTypeService.getExpenseTypes())
+      this.setState({
+        expenses,
+        biggestExpenses,
+        budgets,
+        types
+      })
+    })
+    //this.updateChart()
+  }
+
+
+
   /**
    * Retorna o titulo da pagina
    * @return {string}
@@ -26,13 +40,6 @@ export default class Home extends React.Component {
     return 'Home';
   }
 
-  /**
-   * Busca os tipos de despesa mas dessa vez hasheado para procura mais facil
-   * @return {{}|[]|any}
-   */
-  get types () {
-    return this.props.expenseTypeService.getExpenseTypes(true)
-  }
 
   /**
    * Retorna os valores padrões dos graficos e suas opções para cada tipo
@@ -96,10 +103,6 @@ export default class Home extends React.Component {
     ))
   }
 
-  componentDidMount () {
-    this.updateChart()
-  }
-
   /**
    * Atualiza com valores reais os valores dos graficos
    */
@@ -121,6 +124,70 @@ export default class Home extends React.Component {
     return Object.values(this.state.budgets).filter(budget => budget.overflow).length > 0
   }
 
+  /*render () {
+    return (
+      <div className="home page">
+        {this.state.expenses.length > 0 ?
+          (<div>
+            <div className="title">
+              <div>Maiores Despesas</div>
+              <hr/>
+            </div>
+            <div className="section">
+              <table>
+                <tbody id="biggest-body-table">
+                {this.biggestExpenses}
+                </tbody>
+              </table>
+            </div>
+            <div className="title section">
+              <div>Resumo</div>
+              <hr style={{ background: 'linear-gradient(to left,  black 20.3%,#ebebeb 20.3%)' }}/>
+            </div>
+            <div className="section">
+              <div className="charts">
+                <div className="flex column items-center">
+                  <div className="type">Fixas</div>
+                  <Doughnut data={this.state.charts.fixed.data} plugins={this.state.charts.fixed.plugins} options={this.state.charts.fixed.options} width={100} height={100}/>
+                </div>
+                <div className="flex column items-center">
+                  <div className="type">Variáveis</div>
+                  <Doughnut data={this.state.charts.variable.data} plugins={this.state.charts.variable.plugins} options={this.state.charts.variable.options} width={100} height={100}/>
+                </div>
+                <div className="flex column items-center">
+                  <div className="type">Eventuais</div>
+                  <Doughnut data={this.state.charts.event.data} plugins={this.state.charts.event.plugins} options={this.state.charts.event.options} width={100} height={100}/>
+                </div>
+              </div>
+            </div>
+            <div className="section">
+              {!this.hasOverflow ?
+                (<div className="badge success status">
+                  Dentro do Planejado
+                </div>)
+              :
+                (<div className="badge negative status">
+                  Fora do Planejado
+                </div>)}
+            </div>
+            <div className="section">
+              <div>
+                <Btn onClick={() => this.props.changePage(ExpenseTypes)} className="btn secondary">Gerenciar Categorias</Btn>
+              </div>
+            </div>
+          </div>)
+          : (<div>
+            <div className="text-center">
+              <img src={sadFace} alt="Triste" className="sad-face"/>
+              <h3 className="subtitle">
+                <span>Você não possui nenhuma despesa</span>
+                <span>Que tal cadastrar uma ?</span>
+              </h3>
+            </div>
+          </div>)}
+      </div>
+    );
+  }*/
   render () {
     return (
       <div className="home page">

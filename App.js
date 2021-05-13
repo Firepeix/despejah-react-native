@@ -7,6 +7,7 @@ import { expo } from './app.json';
 import MainLayout from './layout/MainLayout';
 import ExpenseTypeService from './services/ExpenseTypeService';
 import ExpenseService from './services/ExpenseService';
+import RouteService from './services/RouteService';
 
 const theme = {
   ...DefaultTheme,
@@ -25,13 +26,14 @@ class App extends React.Component{
     super(props);
     this.expenseServiceType = new ExpenseTypeService()
     this.expenseService = new ExpenseService()
+    this.routeService = new RouteService();
   }
 
   render () {
     return (
       <View style={{flex: 1}}>
         <StatusBar style="auto" />
-        <MainLayout expenseService={this.expenseService} expenseTypeService={this.expenseServiceType} style={{flex: 1}} />
+        <MainLayout expenseService={this.expenseService} routeService={this.routeService} expenseTypeService={this.expenseServiceType} style={{flex: 1}} />
       </View>
     )
   }

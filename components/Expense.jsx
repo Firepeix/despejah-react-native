@@ -65,18 +65,6 @@ export default class Expense extends React.Component {
   }
 
   /**
-   * Retorna a classe do menu baseado em seu estado
-   * @return {string}
-   */
-  get menuClass () {
-    let className = 'menu'
-    if (!this.state.menuIsOpened) {
-      className += ' closed'
-    }
-    return className
-  }
-
-  /**
    * Busca o modelo da Expense com base nas propriedades
    * @return {{date, amount, name, typeId, id}}
    */
@@ -89,21 +77,6 @@ export default class Expense extends React.Component {
       amount: this.props.amount
     }
   }
-
-  /*<ul className={this.menuClass} id="expense-menu" style={{ height: '97px' }}>
-            <li>
-              <div onClick={() => } className="flex items-center">
-                <img src={pencil} alt="Editar" className="icon"/>
-                <div className="update"></div>
-              </div>
-            </li>
-            <li>
-              <div onClick={} className="flex items-center">
-                <img src={minusCircle} alt="Deletar" className="icon"/>
-                <div className="delete"></div>
-              </div>
-            </li>
-          </ul>*/
 
   render () {
     return (
