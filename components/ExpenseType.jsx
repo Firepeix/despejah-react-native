@@ -74,16 +74,7 @@ export default class ExpenseType extends React.Component {
    */
   updateTypeAmount = () => {
     this.setState({ updateDialog: true, menuIsOpened: false });
-    //AlertPrimitive.updateExpenseType(this.props.limit, limit => {
-    //  this.props.updateType(this.props.id, limit)
-    //})
   };
-
-  componentDidUpdate (prevProps, prevState, snapshot) {
-    if (!prevState.updateDialog && this.state.updateDialog) {
-      console.log(this.limitInput);
-    }
-  }
 
   update = async () => {
     this.setState({ updateDialog: false });

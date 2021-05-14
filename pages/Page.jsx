@@ -7,6 +7,21 @@ export default class Page extends React.Component {
     this.createStyle()
   }
 
+  _getBadge() {
+    return {
+      textTransform: 'uppercase',
+      color: 'white',
+      borderRadius: 8,
+      textAlign: 'center',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: '700',
+      fontSize: 24,
+      paddingTop: 5,
+      paddingBottom: 6,
+    }
+  }
+
   createStyle (overload = { page: { } }) {
     this.style = StyleSheet.create({
       page: {
@@ -35,6 +50,19 @@ export default class Page extends React.Component {
         borderBottomWidth: 2,
         borderColor: '#ebebeb',
         backgroundColor: 'white'
+      },
+      section: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center'
+      },
+      successBadge: {
+        ...this._getBadge(),
+        backgroundColor: '#7fe1ad',
+      },
+      negativeBadge: {
+        ...this._getBadge(),
+        backgroundColor: '#de4343',
       }
     })
 

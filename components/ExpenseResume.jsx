@@ -1,32 +1,47 @@
 import React from 'react';
 import NumberPrimitive from '../Primitives/NumberPrimitive';
-import { car, foodForkDrink, tag } from '../icons/expense-types/expense-type-icons';
+import { View, StyleSheet } from 'react-native';
+import { Text } from 'react-native-paper';
+import Icon from 'react-native-paper/lib/module/components/Icon';
 
 export default class ExpenseResume extends React.Component {
+  constructor (props) {
+    super(props);
+    this.createStyle()
+  }
 
-  /**
-   * Tabela HASH que retorna o icone svg a partir do id
-   * @return {{'food-fork-drink', car, tag}}
-   */
-  get expenseTypeIcons () {
-    return {
-      'food-fork-drink': foodForkDrink,
-      car: car,
-      tag: tag
-    };
+  createStyle () {
+    this.style = StyleSheet.create({
+      resume: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingBottom: 6,
+        paddingTop: 2,
+        borderBottomWidth: this.props.withoutBorder ? 1 : 0,
+        borderTopWidth: this.props.withoutBorder ? 1 : 0,
+        borderBottomColor: '#cfcfcf',
+        borderTopColor: '#cfcfcf',
+      },
+      amount: {
+        fontSize: 17,
+        textAlign: 'right',
+        color: '#a4a4a4',
+        fontWeight: '700'
+      },
+    })
   }
 
   render () {
     return (
-      <tr className="expense-resume">
-        <th>
-          <div>
-            <img src={this.expenseTypeIcons[this.props.type.icon]} alt={this.props.type.name} className="icon" />
-            <div className="name">{this.props.name}</div>
-          </div>
-        </th>
-        <td className="amount">R$ {NumberPrimitive.toReal(this.props.amount)}</td>
-      </tr>
+      <View style={this.style.resume}>
+       <View style={{flexDirection: 'row', alignItems: 'center'}}>
+         <Icon size={30} source={this.props.type.icon}/>
+         <Text style={{marginLeft: 5, fontSize: 16}}>{this.props.name}</Text>
+       </View>
+        <Text style={this.style.amount}>R$ {NumberPrimitive.toReal(this.props.amount)}</Text>
+      </View>
     )
   }
 }

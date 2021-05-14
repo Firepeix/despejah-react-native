@@ -1,9 +1,11 @@
-//import Home from './Home';
+import Home from './Home';
 import Expenses from './Expenses';
 import NewExpense from './NewExpense';
+import ExpenseTypes from './ExpenseTypes';
 
 export default {
-  //home: Home,
+  home: Home,
   expenses: Expenses,
   newExpense: NewExpense,
+  expenseTypes: ExpenseTypes,
 }

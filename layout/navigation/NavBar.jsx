@@ -39,7 +39,7 @@ export default class NavBar extends React.Component {
   render () {
     return (
       <View style={this.style.bar}>
-        <NavButton onPress={() => console.log(123)} icon="home" title={'Home'}/>
+        <NavButton onPress={() => this.changePages('home')} icon="home" title={'Home'}/>
         <MainButton onPress={() => this.changePages('newExpense')} icon="plus" active={this.props.mainButton === 'newExpense'} title={'Despesa'} />
         <MainButton onPress={() => this.props.dispatchMainButtonClicked()} icon="check-bold" active={this.props.mainButton === 'saveExpense'} title={'Salvar'} />
         <NavButton onPress={() => this.changePages('expenses')} icon="format-list-bulleted" title={'Lista'} />

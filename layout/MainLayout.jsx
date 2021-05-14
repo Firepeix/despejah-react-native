@@ -4,15 +4,14 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import NavBar from './navigation/NavBar';
 import Constants from 'expo-constants';
 import { Snackbar } from 'react-native-paper';
-import ExpenseTypes from '../pages/ExpenseTypes';
-//import Home from '../pages/Home';
+import Home from '../pages/Home';
 
 export default class MainLayout extends React.Component {
   constructor (props) {
     super(props);
     this.createStyle()
     this.state = {
-      page: ExpenseTypes,
+      page: Home,
       mainButton: 'newExpense',
       mainButtonAction: null,
       toast: {
