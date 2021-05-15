@@ -13,7 +13,9 @@ export default class Expenses extends Page{
     }
   }
 
-
+  /**
+   * Cria o estilo nos componentes para utilização
+   */
   createStyle () {
     super.createStyle({
       page: {

@@ -10,6 +10,9 @@ export default class ExpenseResume extends React.Component {
     this.createStyle()
   }
 
+  /**
+   * Cria o estilo nos componentes para utilização
+   */
   createStyle () {
     this.style = StyleSheet.create({
       resume: {

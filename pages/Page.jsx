@@ -22,6 +22,9 @@ export default class Page extends React.Component {
     }
   }
 
+  /**
+   * Cria o estilo nos componentes para utilização
+   */
   createStyle (overload = { page: { } }) {
     this.style = StyleSheet.create({
       page: {

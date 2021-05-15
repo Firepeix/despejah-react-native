@@ -26,6 +26,9 @@ export default class NewExpense extends Page {
   }
 
 
+  /**
+   * Cria o estilo nos componentes para utilização
+   */
   createStyle (overload = { page: {} }) {
     super.createStyle(overload);
     this.newExpenseStyle = StyleSheet.create({

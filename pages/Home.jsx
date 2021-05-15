@@ -43,7 +43,9 @@ export default class Home extends Page {
     });
   }
 
-
+  /**
+   * Cria o estilo nos componentes para utilização
+   */
   createStyle (overload = { page: {} }) {
     super.createStyle({
       page: {

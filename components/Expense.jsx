@@ -14,6 +14,9 @@ export default class Expense extends React.Component {
     this.createStyle()
   }
 
+  /**
+   * Cria o estilo nos componentes para utilização
+   */
   createStyle () {
     this.style = StyleSheet.create({
       expense: {

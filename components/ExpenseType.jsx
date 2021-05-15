@@ -16,6 +16,9 @@ export default class ExpenseType extends React.Component {
     this.limitInput = React.createRef();
   }
 
+  /**
+   * Cria o estilo nos componentes para utilização
+   */
   createStyle () {
     this.style = StyleSheet.create({
       expenseType: {
@@ -70,17 +73,23 @@ export default class ExpenseType extends React.Component {
 
 
   /**
-   * Atualiza o limite do pai com base na função prop do pai
+   * Abre o dialogo de edição
    */
   updateTypeAmount = () => {
     this.setState({ updateDialog: true, menuIsOpened: false });
   };
 
+  /**
+   * Atualiza o limite do pai com base na função prop do pai
+   */
   update = async () => {
     this.setState({ updateDialog: false });
     this.props.updateType(this.props.id, this.state.newLimit ? this.state.newLimit : this.props.limit)
   }
 
+  /**
+   * Fecha o dialogo de edição
+   */
   dismiss = () => {
     this.setState({ updateDialog: false });
   }
