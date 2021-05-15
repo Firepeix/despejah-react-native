@@ -78,7 +78,7 @@ export default class ExpenseType extends React.Component {
 
   update = async () => {
     this.setState({ updateDialog: false });
-    this.props.updateType(this.props.id, this.state.newLimit)
+    this.props.updateType(this.props.id, this.state.newLimit ? this.state.newLimit : this.props.limit)
   }
 
   dismiss = () => {

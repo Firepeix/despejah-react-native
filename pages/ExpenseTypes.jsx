@@ -2,6 +2,7 @@ import React from 'react';
 import ExpenseType from '../components/ExpenseType';
 import Page from './Page';
 import { View } from 'react-native';
+import NumberPrimitive from '../Primitives/NumberPrimitive';
 
 export default class ExpenseTypes extends Page {
 
@@ -44,7 +45,7 @@ export default class ExpenseTypes extends Page {
   updateType = async (id, newLimit) => {
     const type = this.state.types.find(type => type.id === id)
     if (type !== undefined) {
-      type.limit = newLimit
+      type.limit = NumberPrimitive.toInt(newLimit)
       await this.props.expenseTypeService.updateType(type)
       this.props.toast('Limite editado com sucesso')
       const types = await this.props.expenseTypeService.getExpenseTypes()

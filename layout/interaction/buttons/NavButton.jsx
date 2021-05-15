@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Text } from 'react-native-paper';
-import { Image, StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default class NavButton extends React.Component {
 
@@ -55,18 +55,6 @@ export default class NavButton extends React.Component {
     return this.props.active !== undefined ? this.props.active : true
   }
 
-  //render () {
-  //  if (this.isActive) {
-  //    return (
-  //      <Ripples onClick={this.props.onClick} className={this.buttonClass} color={'rgba(255, 255, 255, 0.3)'}>
-  //        <img src={this.props.icon} alt={this.props.title} className="icon"/>
-  //        <span className="title">{this.props.title}</span>
-  //      </Ripples>
-  //    );
-  //  }
-//
-  //  return ''
-  //}
 
   render () {
     if (this.isActive) {

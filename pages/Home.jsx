@@ -2,7 +2,7 @@ import React from 'react';
 import ExpenseResume from '../components/ExpenseResume';
 import Page from './Page';
 import { Button, Divider, Text } from 'react-native-paper';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Icon from 'react-native-paper/lib/module/components/Icon';
 import { PieChart } from "react-native-chart-kit";
 
@@ -16,41 +16,15 @@ export default class Home extends Page {
       biggestExpenses: [],
       budgets: [],
       charts: this.defaultCharts,
-      chartConfiguration: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        datasets: [{
-          label: '# of Votes',
-          data: [12, 19, 3, 5, 2, 3],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255,99,132,1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
-        }],
-        options: {
-          maintainAspectRatio: false,
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
-              }
-            }]
-          }
-        }
-      }
+      loaded: false
     };
+    this.chartConfig = {
+      backgroundColor: "#e26a00",
+      backgroundGradientFrom: "#fb8c00",
+      backgroundGradientTo: "#ffa726",
+      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+      labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    }
   }
 
   componentDidMount () {
@@ -62,7 +36,8 @@ export default class Home extends Page {
         expenses,
         biggestExpenses,
         budgets,
-        types
+        types,
+        loaded: true
       });
       this.updateChart();
     });
@@ -79,14 +54,14 @@ export default class Home extends Page {
       title: {
         textAlign: 'right',
         fontWeight: '700',
-        fontSize: 16
+        fontSize: 25
       },
       subTitle: {
         fontWeight: '700',
         color: '#a4a4a4',
         flex: 1,
         textAlign: 'center',
-        fontSize: 20
+        fontSize: 21
       },
       emptySection: {
         flex: 1,
@@ -95,6 +70,25 @@ export default class Home extends Page {
       },
       section: {
         paddingBottom: 20
+      },
+      type: {
+        color: '#a4a4a4',
+        textAlign: 'center',
+        fontWeight: '700',
+        paddingBottom: 6,
+        fontSize: 18
+      },
+      chartWrapper: {
+        flex: 0.33,
+        textAlign: 'center',
+        alignContent: 'center'
+      },
+      divider: {
+        backgroundColor: '#d2d2d2',
+        height: 5,
+        borderRadius: 4,
+        marginTop: 7,
+        marginBottom: 7
       }
     });
   }
@@ -113,51 +107,11 @@ export default class Home extends Page {
    * @return {{}}
    */
   get defaultCharts () {
-    const configurations = { fixed: { color: '#0c59cf' }, variable: { color: '#e61610' }, event: { color: '#606060' } };
-    const charts = {};
-    Object.keys(configurations).forEach(name => {
-      charts[name] = {
-        plugins: [{
-          id: 'text-in-donut',
-          afterDraw: chart => {
-            let theCenterText = this.state.charts[name].data.datasets[0].data[0].toFixed(0) + "%";
-            const canvasBounds = chart.canvas.getBoundingClientRect();
-            const fontSz = Math.floor(canvasBounds.height * 0.18);
-            chart.ctx.textBaseline = 'middle';
-            chart.ctx.textAlign = 'center';
-            chart.ctx.font = 'bold ' + fontSz + 'px Arial ';
-            chart.ctx.fillStyle = configurations[name].color;
-            chart.ctx.fillText(theCenterText, canvasBounds.width / 1.9, canvasBounds.height * 0.53);
-          }
-        }],
-        options: {
-          plugins: {
-            legend: {
-              display: false
-            },
-            tooltip: {
-              callbacks: {
-                label: function (tooltipItem) {
-                  return ' ' + tooltipItem.label + ': ' + tooltipItem.parsed + '%';
-                }
-              }
-            }
-          }
-        },
-        data: {
-          datasets: [
-            {
-              data: [50, 50],
-              backgroundColor: [
-                configurations[name].color,
-                'rgba(235, 235, 235, 1)'
-              ]
-            }],
-          labels: ['Gasto', 'Restante']
-        }
-      };
-    });
-    return charts;
+    return {
+      fixed: [{color: '#0c59cf', amount: 0}, {color: '#ebebeb', amount: 100}],
+      variable: [{color: '#e61610', amount: 0}, {color: '#ebebeb', amount: 100}],
+      event: [{color: '#303030', amount: 0}, {color: '#ebebeb', amount: 100}],
+    };
   }
 
   /**
@@ -177,8 +131,12 @@ export default class Home extends Page {
     const chartIds = ['fixed', 'variable', 'event'];
     const charts = this.state.charts;
     chartIds.forEach(id => {
-      charts[id].data.datasets[0].data[0] = this.state.budgets[id].filledPercentage > 100 ? 100 : this.state.budgets[id].filledPercentage;
-      charts[id].data.datasets[0].data[1] = this.state.budgets[id].filledPercentage > 100 ? 0 : 100 - this.state.budgets[id].filledPercentage;
+      const budget = this.state.budgets[id];
+      if (budget) {
+        const amount = budget.filledPercentage;
+        charts[id][0].amount = amount >= 100 ? 100 : amount;
+        charts[id][1].amount = amount >= 100 ? 0 : 100 - amount;
+      }
     });
     this.setState({ charts });
   }
@@ -191,107 +149,89 @@ export default class Home extends Page {
     return Object.values(this.state.budgets).filter(budget => budget.overflow).length > 0;
   }
 
-  /*render () {
-    return (
-      <div className="home page">
-        {this.state.expenses.length > 0 ?
-          (<div>
-
-
-            <div className="title section">
-              <div>Resumo</div>
-              <hr style={{ background: 'linear-gradient(to left,  black 20.3%,#ebebeb 20.3%)' }}/>
-            </div>
-            <div className="section">
-              <div className="charts">
-                <div className="flex column items-center">
-                  <div className="type">Fixas</div>
-                </div>
-                <div className="flex column items-center">
-                  <div className="type">Variáveis</div>
-                  <Doughnut data={this.state.charts.variable.data} plugins={this.state.charts.variable.plugins} options={this.state.charts.variable.options} width={100} height={100}/>
-                </div>
-                <div className="flex column items-center">
-                  <div className="type">Eventuais</div>
-                  <Doughnut data={this.state.charts.event.data} plugins={this.state.charts.event.plugins} options={this.state.charts.event.options} width={100} height={100}/>
-                </div>
-              </div>
-            </div>
-
-          </div>)
-
-      </div>
-    );
-  }*/
   render () {
-    return (
-      <View style={this.style.page}>
-        {this.state.expenses.length > 0 ?
-          (<View style={{ paddingTop: 20 }}>
-            <Text style={this.homeStyle.title}>Maiores Despesas</Text>
-            <Divider/>
-            <View style={this.homeStyle.section}>
-              {this.biggestExpenses}
-            </View>
-            <Text style={this.homeStyle.title}>Resumo</Text>
-            <Divider/>
-            <View style={this.homeStyle.section}>
-              <PieChart
-                data={[{
-                  name: "Seoul",
-                  population: 21500000,
-                  color: "rgba(131, 167, 234, 1)",
-                  legendFontColor: "#7F7F7F",
-                  legendFontSize: 15
-                }]}
-                width={Dimensions.get("window").width}
-                height={220}
-                chartConfig={{
-                  backgroundColor: "#e26a00",
-                  backgroundGradientFrom: "#fb8c00",
-                  backgroundGradientTo: "#ffa726",
-                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                  labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                  style: {
-                    borderRadius: 16
-                  },
-                  propsForDots: {
-                    r: "6",
-                    strokeWidth: "2",
-                    stroke: "#ffa726"
-                  }
-                }}
-                accessor={"population"}
-                backgroundColor={"transparent"}
-                paddingLeft={"15"}
-                center={[10, 50]}
-                absolute
-              />
-            </View>
-            <View style={this.homeStyle.section}>
-              {!this.hasOverflow ?
-                (<Text style={this.style.successBadge}>
-                  Dentro do Planejado
-                </Text>)
-                :
-                (<Text style={this.style.negativeBadge}>
-                  Fora do Planejado
-                </Text>)}
-            </View>
-            <View style={this.homeStyle.section}>
-              <Button mode={'contained'} onPress={() => this.props.changePage('expenseTypes')}>Gerenciar Categorias</Button>
-            </View>
-          </View>)
-          : (
-            <View style={this.homeStyle.emptySection}>
-              <Icon source={'emoticon-sad-outline'} size={170}/>
-              <Text style={this.homeStyle.subTitle}>Você não possui nenhuma despesa</Text>
-              <Text style={this.homeStyle.subTitle}>Que tal cadastrar uma ?</Text>
-            </View>
-          )
-        }
+    if (this.state.loaded) {
+      return (
+        <View style={this.style.page}>
+          {this.state.expenses.length > 0 ?
+            (<View style={{ paddingTop: 20 }}>
+              <Text style={this.homeStyle.title}>Maiores Despesas</Text>
+              <Divider style={this.homeStyle.divider}/>
+              <View style={this.homeStyle.section}>
+                {this.biggestExpenses}
+              </View>
+              <Text style={this.homeStyle.title}>Resumo</Text>
+              <Divider style={this.homeStyle.divider}/>
+              <View style={this.homeStyle.section}>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <View style={this.homeStyle.chartWrapper}>
+                    <Text style={this.homeStyle.type}>Fixas</Text>
+                    <PieChart
+                      data={this.state.charts.fixed}
+                      hasLegend={false}
+                      width={100}
+                      height={100}
+                      chartConfig={this.chartConfig}
+                      accessor={"amount"}
+                      backgroundColor={"transparent"}
+                      center={[32, 5]}
+                    />
+                  </View>
+                  <View style={this.homeStyle.chartWrapper}>
+                    <Text style={this.homeStyle.type}>Variáveis</Text>
+                    <PieChart
+                      data={this.state.charts.variable}
+                      hasLegend={false}
+                      width={100}
+                      height={100}
+                      chartConfig={this.chartConfig}
+                      accessor={"amount"}
+                      backgroundColor={"transparent"}
+                      center={[31, 5]}
+                    />
+                  </View>
+                  <View style={this.homeStyle.chartWrapper}>
+                    <Text style={this.homeStyle.type}>Eventuais</Text>
+                    <PieChart
+                      data={this.state.charts.event}
+                      hasLegend={false}
+                      width={100}
+                      height={100}
+                      chartConfig={this.chartConfig}
+                      accessor={"amount"}
+                      backgroundColor={"transparent"}
+                      center={[32, 5]}
+                    />
+                  </View>
+                </View>
+              </View>
+              <View style={this.homeStyle.section}>
+                {!this.hasOverflow ?
+                  (<Text style={this.style.successBadge}>
+                    Dentro do Planejado
+                  </Text>)
+                  :
+                  (<Text style={this.style.negativeBadge}>
+                    Fora do Planejado
+                  </Text>)}
+              </View>
+              <View style={this.homeStyle.section}>
+                <Button mode={'contained'} onPress={() => this.props.changePage('expenseTypes')}>Gerenciar Categorias</Button>
+              </View>
+            </View>)
+            : (
+              <View style={this.homeStyle.emptySection}>
+                <Icon source={'emoticon-sad-outline'} size={170}/>
+                <Text style={this.homeStyle.subTitle}>Você não possui nenhuma despesa</Text>
+                <Text style={this.homeStyle.subTitle}>Que tal cadastrar uma ?</Text>
+              </View>
+            )
+          }
 
-      </View>
-    );
+        </View>
+      );
+    }
+
+    return null
   }
 }

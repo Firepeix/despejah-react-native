@@ -58,7 +58,6 @@ export default class ExpenseService {
    */
   createBudget(type, expenses) {
     const expended = expenses.reduce((value, expense) => value + expense.amount, 0)
-
     return {
       typeId: type.id,
       expenses: expenses,

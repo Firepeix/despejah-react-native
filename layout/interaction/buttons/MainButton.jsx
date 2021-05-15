@@ -18,12 +18,13 @@ export default class MainButton extends React.Component {
         flexDirection: 'column',
         backgroundColor: '#ff4a57',
         borderRadius: 200,
-        width: 80,
-        height: 80,
+        width: 90,
+        height: 90,
         textAlign: 'center',
+        marginTop: -60
       },
       label: {
-        fontSize: 15,
+        fontSize: 19,
         fontWeight: '700',
         color: 'white',
       }
@@ -42,7 +43,7 @@ export default class MainButton extends React.Component {
     if (this.isActive) {
       return (
         <TouchableRipple style={this.style.button} onPress={this.props.onPress} rippleColor="rgba(255, 255, 255, .32)">
-          <View >
+          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <Icon source={this.props.icon} size={33} color={'white'} />
             <Text style={this.style.label}>{this.props.title}</Text>
           </View>
